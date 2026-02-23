@@ -22,4 +22,5 @@ alter table produto alter column descricao type varchar(200)
  
 alter table produto drop column situacao
  
+
 drop table produto

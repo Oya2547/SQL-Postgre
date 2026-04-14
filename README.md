@@ -149,3 +149,140 @@ Se os requisitos mudarem, usamos o comando **ALTER** para atualizar a estrutura 
 O  comando  DROP  é  destrutivo. Ele remove  toda  a  estrutura  e  todos  os  registros  armazenados  
 nela.  
 • **DROP TABLE** Products;
+
+# DML - Linguagem de Manipulação de Dados
+
+Nós usamos DML (Data Manipulation Language) para alterar os dados reais armazenados dentro de nossas tabelas. Enquanto a DDL define o "recipiente", a DML nos permite gerenciar o conteúdo interno.
+
+## Operações Principais de DML
+Nós contamos com três comandos primários para manipular nossos dados:
+- **INSERT**: Nós usamos para adicionar novas linhas de dados em uma tabela.
+- **UPDATE**: Nós usamos para modificar informações existentes dentro de uma tabela.
+- **DELETE**: Nós usamos para remover registros específicos de uma tabela.
+
+## Adicionando Dados (INSERT)
+Quando queremos popular nossas tabelas, temos dois métodos principais para inserir dados:
+
+**Método 1: Entrada Manual (VALUES)**
+Nós especificamos manualmente os valores que queremos adicionar a colunas específicas.
+
+
+INSERT INTO Products (ProductID, ProductName, Price)
+VALUES (1, 'Laptop', 1200.00);
+
+---
+
+### Código Markdown - Aula 3.2
+
+
+# Anatomia de uma Declaração SQL
+
+Uma instrução SQL é composta de elementos específicos que dizem ao banco como processar o pedido:
+
+- **Comentários (--)** – Documentam o código.
+- **Palavras-chave** – Reservadas e com significado especial.
+- **Cláusulas** – Blocos que constroem a instrução.
+- **Funções** – Ferramentas internas que transformam dados.
+- **Identificadores** – Nomes de objetos de banco como tabelas ou colunas.
+- **Operadores** – Usados para comparações.
+- **Literais** – Valores constantes ou strings.
+
+## Estrutura Básica de Consulta
+SELECT
+  column_name
+FROM
+  table_name;
+
+  # Chave Estrangeira
+
+O que é Chave Estrangeira (Foreign Key)?
+A chave estrangeira é um campo de uma tabela que aponta para a chave primária de outra tabela. Ela serve para criar relacionamento entre tabelas.
+Em outras palavras:
+A chave estrangeira é o que “liga” uma tabela à outra em um banco de dados relacional.
+
+## Por que precisamos dela?
+**Sem chave estrangeira:**
+- As tabelas ficam isoladas
+- Não há garantia de que os dados combinam
+- Podem existir registros “órfãos” (sem relação real)
+
+**Com chave estrangeira:**
+- O banco garante integridade dos dados
+- Evita erros e inconsistências
+- Representa relações do mundo real (cliente → pedido, aluno → matrícula, etc.)
+
+## Exemplo prático - Tabela de Clientes
+| Id (PK) | Nome |
+| :--- | :--- |
+| 1 | Ana Silva |
+| 2 | João Souza |
+
+## Exemplo prático - Tabela de Pedidos
+| Id (PK) | clienteId (FK) | Total |
+| :--- | :--- | :--- |
+| 1001 | 1 | 3500 |
+| 1002 | 2 | 200 |
+| 1003 | 1 | 1200 |
+
+# Normalização
+
+Normalizar um banco de dados é organizar as informações para que cada dado exista apenas uma vez, evitando repetição, erros e bagunça nas tabelas.
+
+## Forma Não Normalizada (UNF)
+Todos os dados estão misturados em uma única tabela, com grupos repetidos.
+- Dados do cliente repetidos.
+- Difícil de consultar e manter.
+
+## Primeira Forma Normal (1FN)
+Os campos devem ser atômicos (um único valor por célula).
+
+**Problema:**
+- Dados do cliente continuam duplicados.
+- Total pertece APENAS ao pedido.
+- Ainda existem dependências (responsabilidades) na mesma tabela.
+
+## Segunda Forma Normal (2FN)
+**Regras:**
+- Deve estar na 1FN.
+- Removemos dependências parciais.
+- Cada entidade passa a ter sua própria tabela e ter sua própria chave primária.
+
+**Problema:**
+- Produto é um texto livre... está "solto".
+
+## Terceira Forma Normal (3FN)
+**Regras:**
+- Deve estar na 2FN.
+- Remover dependências transitivas.
+- Campos não-chave DEVEM depender apenas da chave.
+
+## Resultado
+O banco de dados agora possui:
+- Ausência de redundância.
+- Relacionamentos claros (Chaves Estrangeiras).
+- Estrutura relacional correta.
+- Melhor desempenho.
+- Manutenção facilitada.
+
+**Isso torna os bancos de dados:**
+- Mais eficientes.
+- Mais confiáveis.
+- Mais fáceis de escalar.
+- Mais fáceis de entender.
+
+# Métodos de Combinação
+
+## JOINS (Adição de Colunas - Horizontal)
+Conectamos tabelas lateralmente através de uma coluna comum (Chave).
+
+- **Inner Join**: Apenas o que existe em ambas as tabelas.
+- **Left Join**: Mantemos tudo da tabela à esquerda e trazemos o que houver da direita.
+- **Right Join**: Mantemos tudo da direita e trazemos o que houver da esquerda.
+- **Full Join**: Trazemos tudo de ambos os lados, independentemente de haver correspondência.
+
+**Como Usamos Joins:**
+SELECT
+ TabelaA.Nome,
+ TabelaB.Pais
+FROM
+ TabelaA INNER JOIN TabelaB ON TabelaA.id = TabelaB.id;
